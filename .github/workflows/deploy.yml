@@ -3,8 +3,6 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build-and-push:
@@ -25,7 +23,9 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/hola-anddy:latest
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/hola-anddy:latest
+          ${{ secrets.DOCKER_USERNAME }}/hola-anddy:${{ github.sha }}
   
   deploy:
     needs: build-and-push
@@ -33,5 +33,11 @@ jobs:
     
     steps:
     - name: Deploy to Render
+      env:
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        curl -X POST "https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
+        curl -X POST \
+          -H "Accept: application/json" \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          "https://api.render.com/v1/services/srv-d43u9e6mcj7s73bfqprg/deploys" \
+          -d '{"clearCache": "clear"}'
