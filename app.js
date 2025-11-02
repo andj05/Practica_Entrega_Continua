@@ -66,7 +66,7 @@ const server = http.createServer((req, res) => {
         </head>
         <body>
             <div class="container">
-                <h1>¡Hola Anddy El Mejor!</h1>
+                <h1>¡Hola Anddy!</h1>
                 <p>Bienvenido a mi aplicación DevOps</p>
                 <div class="emoji">👋</div>
             </div>
@@ -75,7 +75,7 @@ const server = http.createServer((req, res) => {
     `);
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 10000;
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
